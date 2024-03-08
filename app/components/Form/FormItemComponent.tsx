@@ -1,13 +1,16 @@
 import { ReactNode } from "react";
-import { ColProps, Form } from "antd";
+import { ColProps, Form, type FormProps } from "antd";
 import { Rule } from "antd/es/form";
 
 type IProps = {
   children?: ReactNode;
-  label: string;
-  name: string;
-  rules: Rule[];
+  label?: string;
+  name?: string;
+  rules?: Rule[];
   wrapperCol?: ColProps;
+  colon?: boolean;
+  dependencies?: Array<string>;
+  noStyle?: boolean;
 };
 
 export default function FormItemComponent({
@@ -16,15 +19,20 @@ export default function FormItemComponent({
   name,
   rules,
   wrapperCol,
+  colon,
+  dependencies,
+  noStyle,
 }: IProps) {
   return (
     <>
       <Form.Item
         label={<label style={{ color: "gray" }}>{label}</label>}
-        colon={false}
+        colon={colon}
         name={name}
         rules={rules}
-        wrapperCol={wrapperCol}>
+        dependencies={dependencies}
+        wrapperCol={wrapperCol}
+        noStyle={noStyle}>
         {children}
       </Form.Item>
     </>
