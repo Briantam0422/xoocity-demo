@@ -1,37 +1,19 @@
 "use client";
-import {
-  Col,
-  Row,
-  Card,
-  type FormProps,
-  Form,
-  Input,
-  Button,
-  Avatar,
-  Radio,
-  Space,
-  Select,
-} from "antd";
-import {
-  UserOutlined,
-  DownloadOutlined,
-  CloseCircleOutlined,
-} from "@ant-design/icons";
+import { Col, Row, Card, Form, Button, Avatar, Radio, FormProps } from "antd";
+import { UserOutlined, DownloadOutlined } from "@ant-design/icons";
 import FormLayout from "./components/Form/FormLayout";
-import InputWithClearButtonComponent from "./components/Input/InputWithClearButtonComponent";
 import FormItemComponent from "./components/Form/FormItemComponent";
-import RadioGroupComponent from "./components/Radio/RadioGroupComponent";
-import DatePickerSelectDay from "./components/DatePicker/DatePickerSelectDay";
-import SelectComponent from "./components/Select/SelectComponent";
 import { CountriesType } from "./types/CountryType";
 import { GendersType } from "./types/GenderType";
-import InputComponent from "./components/Input/InputComponent";
 import FormItemInputComponent from "./components/Form/FormItemInputComponent";
 import FormItemRadioComponent from "./components/Form/FormItemRadioComponent";
 import FormItemDatePickerComponent from "./components/Form/FormItemDatePickerComponent";
 import FormItemSelectComponent from "./components/Form/FormItemSelectComponent";
 import { useState } from "react";
 import FormItemTextAreaComponent from "./components/Form/FormItemTextAreaComponent";
+import { UserType } from "./types/UserType";
+
+type FieldType = UserType;
 
 export default function Home() {
   const [cityDisable, setCityDisable] = useState(true);
@@ -43,12 +25,31 @@ export default function Home() {
     { value: "china", label: "中國" },
     { value: "canada", label: "加拿大" },
   ];
+
+  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
+    // TODO call api
+    console.log("Success:", values);
+  };
+
+  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
+    errorInfo
+  ) => {
+    // TODO Display error message
+    console.log("Failed:", errorInfo);
+  };
+
+  const onUploadProfileIcon = () => {
+    // TODO upload image
+  };
+
   return (
     <main>
       <Row justify="center" align="middle">
         <Col sm={24} md={22} lg={18}>
-          <Card title="基本資料">
-            <FormLayout>
+          <Card
+            title="基本資料"
+            style={{ boxShadow: "0px 1px 20px rgba(0, 0, 0, 0.16)" }}>
+            <FormLayout onFinish={onFinish} onFinishFailed={onFinishFailed}>
               <Row justify="center" gutter={25}>
                 <Col span={8} order={2}>
                   <Row justify="center">
@@ -58,7 +59,9 @@ export default function Home() {
                     <Avatar size={100} icon={<UserOutlined />} />
                   </Row>
                   <Row justify="center">
-                    <Button type="primary" icon={<DownloadOutlined />}>
+                    <Button
+                      type="primary"
+                      icon={<DownloadOutlined onClick={onUploadProfileIcon} />}>
                       更新頭像
                     </Button>
                   </Row>
@@ -97,14 +100,12 @@ export default function Home() {
                       lg={{ span: 24 }}>
                       <FormItemRadioComponent label="性別" name="gender">
                         {Object.keys(arrGenders).map((key: string) => (
-                          <>
-                            <Radio
-                              key={key}
-                              value={key}
-                              style={{ color: "gray" }}>
-                              {arrGenders[key]}
-                            </Radio>
-                          </>
+                          <Radio
+                            key={key}
+                            value={key}
+                            style={{ color: "gray" }}>
+                            {arrGenders[key]}
+                          </Radio>
                         ))}
                       </FormItemRadioComponent>
                     </Col>

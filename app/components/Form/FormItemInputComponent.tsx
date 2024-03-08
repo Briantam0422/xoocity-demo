@@ -1,7 +1,7 @@
 import { CloseCircleOutlined } from "@ant-design/icons";
 import FormItemComponent from "./FormItemComponent";
 import { Input } from "antd";
-import { Rule } from "antd/es/form";
+import Form, { Rule } from "antd/es/form";
 
 type tProps = {
   label: string;
@@ -20,6 +20,10 @@ export default function FormItemInputComponent({
   colon,
   type,
 }: tProps) {
+  const form = Form.useFormInstance();
+  const onClearInput = () => {
+    form.setFieldValue(name, "");
+  };
   return (
     <>
       <FormItemComponent label={label} name={name} rules={rules} colon={colon}>
@@ -28,7 +32,7 @@ export default function FormItemInputComponent({
           type={type}
           suffix={
             <CloseCircleOutlined
-              onClick={() => console.log("a")}
+              onClick={onClearInput}
               style={{ color: "gray" }}
             />
           }

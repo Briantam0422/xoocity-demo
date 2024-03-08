@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { ColProps, Form, type FormProps } from "antd";
 import { Rule } from "antd/es/form";
 
-type IProps = {
+type tProps = {
   children?: ReactNode;
   label?: string;
   name?: string;
@@ -22,7 +22,7 @@ export default function FormItemComponent({
   colon,
   dependencies,
   noStyle,
-}: IProps) {
+}: tProps) {
   return (
     <>
       <Form.Item

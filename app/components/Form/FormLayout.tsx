@@ -2,21 +2,17 @@
 import { ReactNode, ReactPropTypes } from "react";
 import { Form, FormProps, Button } from "antd";
 import { UserType } from "@/app/types/UserType";
-type LayoutProps = {
-  children?: ReactNode;
-};
+import { ValidateErrorEntity } from "rc-field-form/lib/interface";
 
 type FieldType = UserType;
 
-const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-  console.log("Success:", values);
+type LayoutProps = {
+  children?: ReactNode;
+  onFinish: (value: FieldType) => void;
+  onFinishFailed: (errorInfo: ValidateErrorEntity<UserType>) => void;
 };
 
-const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
-  console.log("Failed:", errorInfo);
-};
-
-export default function FormLayout({ children }: LayoutProps) {
+export default function FormLayout({ children, onFinish, onFinishFailed }: LayoutProps) {
   return (
     <>
       <Form
