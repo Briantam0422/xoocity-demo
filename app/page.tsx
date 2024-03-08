@@ -9,13 +9,16 @@ import {
   Button,
   Avatar,
   Radio,
+  Space,
+  Select,
 } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { UserOutlined, DownloadOutlined } from "@ant-design/icons";
 import { UserType, Gender } from "./types/UserType";
 import FormLayout from "./components/Form/FormLayout";
 import InputWithClearButtonComponent from "./components/Input/InputWithClearButtonComponent";
 import FormItemComponent from "./components/Form/FormItemComponent";
 import RadioGroupComponent from "./components/Radio/RadioGroupComponent";
+import DatePickerSelectDay from "./components/DatePicker/DatePickerSelectDay";
 
 export default function Home() {
   const arrGenders: Gender = {
@@ -31,7 +34,14 @@ export default function Home() {
               <Row justify="space-between" gutter={25}>
                 <Col span={8} order={2}>
                   <p>頭像</p>
-                  <Avatar size={100} icon={<UserOutlined />} />
+                  <Row justify="center" style={{ marginBottom: "10px" }}>
+                    <Avatar size={100} icon={<UserOutlined />} />
+                  </Row>
+                  <Row justify="center">
+                    <Button type="primary" icon={<DownloadOutlined />}>
+                      更新頭像
+                    </Button>
+                  </Row>
                 </Col>
                 <Col span={16} order={1}>
                   <Row justify="start" gutter={24}>
@@ -64,9 +74,9 @@ export default function Home() {
                   <Row justify="start" gutter={24}>
                     <Col
                       xs={{ span: 24 }}
-                      sm={{ span: 16 }}
-                      md={{ span: 12 }}
-                      lg={{ span: 8 }}>
+                      sm={{ span: 24 }}
+                      md={{ span: 24 }}
+                      lg={{ span: 24 }}>
                       <FormItemComponent
                         label="性別"
                         name="gender"
@@ -74,7 +84,12 @@ export default function Home() {
                         <RadioGroupComponent>
                           {Object.keys(arrGenders).map((key: string) => (
                             <>
-                              <Radio value={key}>{arrGenders[key]}</Radio>
+                              <Radio
+                                key={key}
+                                value={key}
+                                style={{ color: "gray" }}>
+                                {arrGenders[key]}
+                              </Radio>
                             </>
                           ))}
                         </RadioGroupComponent>
@@ -91,9 +106,9 @@ export default function Home() {
                       <FormItemComponent
                         label="生日"
                         name="birthday"
-                        rules={[
-                          { required: true, message: "請輸入你的性別" },
-                        ]}></FormItemComponent>
+                        rules={[{ required: true, message: "請輸入你的性別" }]}>
+                        <DatePickerSelectDay placeholder="請選擇日期" />
+                      </FormItemComponent>
                     </Col>
                   </Row>
 
@@ -106,56 +121,79 @@ export default function Home() {
                       <FormItemComponent
                         label="國家/地區"
                         name="country"
+                        rules={[{ required: true, message: "請輸入你的性別" }]}>
+                        <Select
+                          placeholder="中國"
+                          style={{ width: "100%" }}></Select>
+                      </FormItemComponent>
+                    </Col>
+                  </Row>
+
+                  <Row justify="start" gutter={24}>
+                    <Col
+                      xs={{ span: 24 }}
+                      sm={{ span: 24 }}
+                      md={{ span: 24 }}
+                      lg={{ span: 24 }}>
+                      <FormItemComponent
+                        label="省市區縣"
+                        name="country"
+                        rules={[{ required: true, message: "請輸入你的性別" }]}>
+                        <Row gutter={10}>
+                          <Col xs={12} sm={12} md={8} lg={6}>
+                            <Select
+                              placeholder="請選擇"
+                              style={{ width: "100%" }}></Select>
+                          </Col>
+                          <Col xs={12} sm={12} md={8} lg={6}>
+                            <Select
+                              placeholder="請選擇"
+                              style={{ width: "100%" }}></Select>
+                          </Col>
+                          <Col xs={12} sm={12} md={8} lg={6}>
+                            <Select
+                              placeholder="請選擇"
+                              style={{ width: "100%" }}></Select>
+                          </Col>
+                          <Col xs={12} sm={12} md={8} lg={6}>
+                            <Select
+                              placeholder="請選擇"
+                              style={{ width: "100%" }}></Select>
+                          </Col>
+                        </Row>
+                      </FormItemComponent>
+                    </Col>
+                  </Row>
+
+                  <Row justify="start" gutter={24}>
+                    <Col
+                      xs={{ span: 24 }}
+                      sm={{ span: 24 }}
+                      md={{ span: 24 }}
+                      lg={{ span: 24 }}>
+                      <FormItemComponent
+                        label="詳細地址"
+                        name="address"
+                        rules={[{ required: true, message: "請輸入你的性別" }]}>
+                        <InputWithClearButtonComponent></InputWithClearButtonComponent>
+                      </FormItemComponent>
+                    </Col>
+                  </Row>
+
+                  <Row justify="start" gutter={24}>
+                    <Col
+                      xs={{ span: 24 }}
+                      sm={{ span: 16 }}
+                      md={{ span: 12 }}
+                      lg={{ span: 8 }}>
+                      <FormItemComponent
+                        label="個人簡介"
+                        name="profile_intro"
                         rules={[
                           { required: true, message: "請輸入你的性別" },
                         ]}></FormItemComponent>
                     </Col>
                   </Row>
-                </Col>
-              </Row>
-
-              <Row justify="start" gutter={24}>
-                <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 16 }}
-                  md={{ span: 12 }}
-                  lg={{ span: 8 }}>
-                  <FormItemComponent
-                    label="省市區縣"
-                    name="country"
-                    rules={[
-                      { required: true, message: "請輸入你的性別" },
-                    ]}></FormItemComponent>
-                </Col>
-              </Row>
-
-              <Row justify="start" gutter={24}>
-                <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 16 }}
-                  md={{ span: 12 }}
-                  lg={{ span: 8 }}>
-                  <FormItemComponent
-                    label="詳細地址"
-                    name="address"
-                    rules={[
-                      { required: true, message: "請輸入你的性別" },
-                    ]}></FormItemComponent>
-                </Col>
-              </Row>
-
-              <Row justify="start" gutter={24}>
-                <Col
-                  xs={{ span: 24 }}
-                  sm={{ span: 16 }}
-                  md={{ span: 12 }}
-                  lg={{ span: 8 }}>
-                  <FormItemComponent
-                    label="個人簡介"
-                    name="profile_intro"
-                    rules={[
-                      { required: true, message: "請輸入你的性別" },
-                    ]}></FormItemComponent>
                 </Col>
               </Row>
               <Row justify="center">

@@ -10,6 +10,5 @@ export type UserType = {
 }
 
 export type Gender = {
-    m : string,
-    f : string
+    [key:string] : string
 }
