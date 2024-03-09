@@ -22,7 +22,8 @@ export default function FormItemDatePickerComponent({
       <FormItemComponent label={label} name={name} rules={rules} colon={colon}>
         <DatePicker
           placeholder={placeholder}
-          style={{ marginLeft: "10px" }}></DatePicker>
+          style={{ marginLeft: "10px" }}
+          format={"YYYY-MM-DD"}></DatePicker>
       </FormItemComponent>
     </>
   );

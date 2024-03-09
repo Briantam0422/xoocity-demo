@@ -8,7 +8,6 @@ type tProp = {
 export default function RadioGroupComponent({ children }: tProp) {
   const [value, setValue] = useState("M");
   const onChange = (e: RadioChangeEvent) => {
-    console.log("radio checked", e.target.value);
     setValue(e.target.value);
   };
   return (

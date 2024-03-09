@@ -1,34 +1,74 @@
 "use client";
 import { Col, Row, Card, Form, Button, Avatar, Radio, FormProps } from "antd";
 import { UserOutlined, DownloadOutlined } from "@ant-design/icons";
-import FormLayout from "./components/Form/FormLayout";
-import FormItemComponent from "./components/Form/FormItemComponent";
-import { CountriesType } from "./types/CountryType";
-import { GendersType } from "./types/GenderType";
-import FormItemInputComponent from "./components/Form/FormItemInputComponent";
-import FormItemRadioComponent from "./components/Form/FormItemRadioComponent";
-import FormItemDatePickerComponent from "./components/Form/FormItemDatePickerComponent";
-import FormItemSelectComponent from "./components/Form/FormItemSelectComponent";
-import { useState } from "react";
-import FormItemTextAreaComponent from "./components/Form/FormItemTextAreaComponent";
-import { UserType } from "./types/UserType";
+import FormLayout from "../../components/Form/FormLayout";
+import FormItemComponent from "../../components/Form/FormItemComponent";
+import { CountriesType } from "../../types/CountryType";
+import { GendersType } from "../../types/GenderType";
+import FormItemInputComponent from "../../components/Form/FormItemInputComponent";
+import FormItemRadioComponent from "../../components/Form/FormItemRadioComponent";
+import FormItemDatePickerComponent from "../../components/Form/FormItemDatePickerComponent";
+import FormItemSelectComponent from "../../components/Form/FormItemSelectComponent";
+import { useEffect, useState } from "react";
+import FormItemTextAreaComponent from "../../components/Form/FormItemTextAreaComponent";
+import { UserType } from "../../types/UserType";
+import { getUserApi, updateUserProfileApi } from "@/api/user/UserApi";
+import dayjs from "dayjs";
+import { useRouter } from "next/router";
+import { useParams } from "next/navigation";
+import { RequestParamType } from "@/app/types/RequestParam";
 
 type FieldType = UserType;
 
 export default function Home() {
+  const [form] = Form.useForm();
+  const params = useParams<RequestParamType>();
+  const user_id: string | number = params["user_id"];
+
   const [cityDisable, setCityDisable] = useState(true);
   const arrGenders: GendersType = {
-    m: "男",
-    f: "女",
+    M: "男",
+    F: "女",
   };
   const arrCountries: Array<CountriesType> = [
     { value: "china", label: "中國" },
     { value: "canada", label: "加拿大" },
   ];
 
-  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
+  useEffect(() => {
+    const Init = async () => {
+      const data = await getUserApi(user_id);
+      if (data) {
+        form.setFieldValue("first_name", data.user.first_name);
+        form.setFieldValue("last_name", data.user.last_name);
+        form.setFieldValue("gender", data.user.gender);
+        form.setFieldValue("birthday", dayjs("2004-02-01"));
+        form.setFieldValue("country", data.user.country);
+        form.setFieldValue("province", data.user.province);
+        form.setFieldValue("city", data.user.city);
+        form.setFieldValue("district", data.user.district);
+        form.setFieldValue("county", data.user.county);
+        form.setFieldValue("address", data.user.address);
+        form.setFieldValue("profile_intro", data.user.profile_intro);
+      }
+    };
+    Init();
+  });
+
+  const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
     // TODO call api
-    console.log("Success:", values);
+    const user = await updateUserProfileApi(user_id, values);
+    form.setFieldValue("first_name", user.first_name);
+    form.setFieldValue("last_name", user.last_name);
+    form.setFieldValue("gender", user.gender);
+    form.setFieldValue("birthday", dayjs(user.birthday));
+    form.setFieldValue("country", user.country);
+    form.setFieldValue("province", user.province);
+    form.setFieldValue("city", user.city);
+    form.setFieldValue("district", user.district);
+    form.setFieldValue("county", user.county);
+    form.setFieldValue("address", user.address);
+    form.setFieldValue("profile_intro", user.profile_intro);
   };
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
@@ -49,7 +89,10 @@ export default function Home() {
           <Card
             title="基本資料"
             style={{ boxShadow: "0px 1px 20px rgba(0, 0, 0, 0.16)" }}>
-            <FormLayout onFinish={onFinish} onFinishFailed={onFinishFailed}>
+            <FormLayout
+              form={form}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}>
               <Row justify="center" gutter={25}>
                 <Col span={8} order={2}>
                   <Row justify="center">
@@ -120,8 +163,8 @@ export default function Home() {
                     <Col
                       xs={{ span: 24 }}
                       sm={{ span: 16 }}
-                      md={{ span: 12 }}
-                      lg={{ span: 8 }}>
+                      md={{ span: 14 }}
+                      lg={{ span: 12 }}>
                       <FormItemDatePickerComponent
                         label="生日"
                         name="birthday"
@@ -134,9 +177,9 @@ export default function Home() {
                   <Row justify="start" gutter={24}>
                     <Col
                       xs={{ span: 24 }}
-                      sm={{ span: 16 }}
-                      md={{ span: 12 }}
-                      lg={{ span: 8 }}>
+                      sm={{ span: 24 }}
+                      md={{ span: 14 }}
+                      lg={{ span: 9 }}>
                       <FormItemSelectComponent
                         label="國家/地區"
                         name="country"

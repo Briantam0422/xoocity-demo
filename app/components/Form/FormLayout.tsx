@@ -1,21 +1,20 @@
 "use client";
-import { ReactNode, ReactPropTypes } from "react";
-import { Form, FormProps, Button } from "antd";
-import { UserType } from "@/app/types/UserType";
+import { ReactNode } from "react";
+import { Form, FormInstance } from "antd";
 import { ValidateErrorEntity } from "rc-field-form/lib/interface";
-
-type FieldType = UserType;
 
 type LayoutProps = {
   children?: ReactNode;
-  onFinish: (value: FieldType) => void;
-  onFinishFailed: (errorInfo: ValidateErrorEntity<UserType>) => void;
+  form: FormInstance
+  onFinish: (value: any) => void;
+  onFinishFailed: (errorInfo: ValidateErrorEntity<any>) => void;
 };
 
-export default function FormLayout({ children, onFinish, onFinishFailed }: LayoutProps) {
+export default function FormLayout({ children, form, onFinish, onFinishFailed }: LayoutProps) {
   return (
     <>
       <Form
+        form={form}
         name="basic"
         wrapperCol={{ span: 20 }}
         initialValues={{ remember: true }}
