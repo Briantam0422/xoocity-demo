@@ -77,6 +77,7 @@ export default function Home() {
                         label="名"
                         name="first_name"
                         placeholder=""
+                        rules={[{ required: true, message: "請輸入名字" }]}
                       />
                     </Col>
                     <Col
@@ -88,6 +89,7 @@ export default function Home() {
                         label="姓"
                         name="last_name"
                         placeholder=""
+                        rules={[{ required: true, message: "請輸入姓名" }]}
                       />
                     </Col>
                   </Row>
@@ -98,7 +100,10 @@ export default function Home() {
                       sm={{ span: 24 }}
                       md={{ span: 24 }}
                       lg={{ span: 24 }}>
-                      <FormItemRadioComponent label="性別" name="gender">
+                      <FormItemRadioComponent
+                        label="性別"
+                        name="gender"
+                        rules={[{ required: true, message: "請選擇性別" }]}>
                         {Object.keys(arrGenders).map((key: string) => (
                           <Radio
                             key={key}
@@ -121,6 +126,7 @@ export default function Home() {
                         label="生日"
                         name="birthday"
                         placeholder="請選擇日期"
+                        rules={[{ required: true, message: "請選擇日期" }]}
                       />
                     </Col>
                   </Row>
@@ -136,6 +142,7 @@ export default function Home() {
                         name="country"
                         placeholder="中國"
                         options={arrCountries}
+                        rules={[{ required: true, message: "請選擇國家/地區" }]}
                       />
                     </Col>
                   </Row>
