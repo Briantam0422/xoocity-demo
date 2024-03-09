@@ -1,3 +1,5 @@
+import { notification } from "antd";
+
 interface iRequest{
     url: string;
     method : string;
@@ -41,24 +43,28 @@ class Request{
         try {
             const url = this.getBaseUrl( options.url )
             const method = options.method
-            // const params = options.params
             const headers = this.getHeaders( options.headers || {} )
-            // const payload = this.getParams( options )
-
             const res = await fetch( url, {
                 method,
                 headers,
                 body : JSON.stringify(options.body)
             } )
             const resData = await res.json()
+
             if ( res.ok && resData.success ) {
                 // display message
                 if ( resData.message !== '' && resData.message !== undefined ) {
-                    console.log(resData.message)
+                    notification.open({
+                        message: 'System Message',
+                        description:resData.message,
+                      });
                 }
                 return resData.data
               } else {
-                console.log(res)
+                notification.open({
+                    message: 'System Message',
+                    description:res.status,
+                  });
                 // server error
                 if ( res.status === 401 ) {
                     console.log( 'error 401' )
@@ -68,6 +74,10 @@ class Request{
                 }
               }
         } catch( e ) {
+            notification.open({
+                message: 'System Message',
+                description: 'System Error',
+              });
             console.log( e )
         }
     }
