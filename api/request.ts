@@ -6,13 +6,14 @@ interface iRequest{
     body?: Object;
     params?: Object;
     headers?: iHeader;
+    formData? : FormData;
 }
 
 export interface iHeader{
     [key:string]: string
 }
 
-const baseUrl = 'http://localhost:8000/api/'
+export const baseUrl = 'http://localhost:8000/api/'
 
 class Request{
     getBaseUrl( url: string ) {
@@ -78,6 +79,45 @@ class Request{
                 message: 'System Message',
                 description: 'System Error',
               });
+            console.log( e )
+        }
+    }
+
+    async uploadFileRequest( options: iRequest ){
+        try {
+            const url = this.getBaseUrl( options.url )
+            const method = options.method
+            const headers = options.headers
+            const body = options.formData
+            const res = await fetch(url, {
+                method: method,
+                headers: headers,
+                body: body,
+            })
+            const resData = await res.json()
+            if ( res.ok && resData.success ) {
+                // display message
+                if ( resData.message !== '' && resData.message !== undefined ) {
+                    notification.open({
+                        message: 'System Message',
+                        description:resData.message,
+                      });
+                }
+                return resData.data
+              } else {
+                notification.open({
+                    message: 'System Message',
+                    description:res.status,
+                  });
+                // server error
+                if ( res.status === 401 ) {
+                    console.log( 'error 401' )
+                }
+                if ( res.status === 500 ) {
+                    console.log( 'error 500' )
+                }
+              }
+        } catch ( e ) {
             console.log( e )
         }
     }

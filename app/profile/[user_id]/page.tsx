@@ -8,9 +8,12 @@ import {
   Avatar,
   Radio,
   FormProps,
-  notification,
+  Upload,
+  UploadProps,
+  GetProp,
+  UploadFile,
 } from "antd";
-import { UserOutlined, DownloadOutlined } from "@ant-design/icons";
+import { UserOutlined, UploadOutlined } from "@ant-design/icons";
 import FormLayout from "../../components/Form/FormLayout";
 import FormItemComponent from "../../components/Form/FormItemComponent";
 import { CountriesType } from "../../types/CountryType";
@@ -22,13 +25,19 @@ import FormItemSelectComponent from "../../components/Form/FormItemSelectCompone
 import { useEffect, useState } from "react";
 import FormItemTextAreaComponent from "../../components/Form/FormItemTextAreaComponent";
 import { UserType } from "../../types/UserType";
-import { getUserApi, updateUserProfileApi } from "@/api/user/UserApi";
+import {
+  getUserApi,
+  updateUserProfileApi,
+  uploadAvatarApi,
+} from "@/api/user/UserApi";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { useParams } from "next/navigation";
 import { RequestParamType } from "@/app/types/RequestParam";
+import apiRequest from "@/api/request";
 
 type FieldType = UserType;
+type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
 export default function Home() {
   const [form] = Form.useForm();
@@ -36,6 +45,9 @@ export default function Home() {
   const user_id: string | number = params["user_id"];
 
   const [cityDisable, setCityDisable] = useState(true);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [avatarUrl, setAvatarUrl] = useState("");
+
   const arrGenders: GendersType = {
     M: "男",
     F: "女",
@@ -63,6 +75,7 @@ export default function Home() {
         form.setFieldValue("county", user.county);
         form.setFieldValue("address", user.address);
         form.setFieldValue("profile_intro", user.profile_intro);
+        setAvatarUrl(user.avatar);
       }
     };
     Init();
@@ -86,12 +99,38 @@ export default function Home() {
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
     errorInfo
   ) => {
-    // TODO Display error message
     console.log("Failed:", errorInfo);
   };
 
-  const onUploadProfileIcon = () => {
-    // TODO upload image
+  const onUploadProfileIcon = async () => {
+    const formData = new FormData();
+    fileList.forEach((file) => {
+      formData.append("files[]", file as FileType);
+    });
+    formData.append("user_id", user_id.toString());
+    const data = await uploadAvatarApi(user_id, formData);
+    console.log(data.url);
+    setAvatarUrl(data.url);
+  };
+
+  const props: UploadProps = {
+    onRemove: (file) => {
+      const index = fileList.indexOf(file);
+      const newFileList = fileList.slice();
+      newFileList.splice(index, 1);
+      setFileList(newFileList);
+    },
+    beforeUpload: (file) => {
+      if (fileList.length > 0) {
+        setFileList([]);
+      }
+      setFileList([...fileList, file]);
+      return false;
+    },
+    onChange: () => {
+      onUploadProfileIcon();
+    },
+    fileList,
   };
 
   return (
@@ -111,14 +150,21 @@ export default function Home() {
                     <p style={{ color: "gray" }}>頭像</p>
                   </Row>
                   <Row justify="center" style={{ marginBottom: "10px" }}>
-                    <Avatar size={100} icon={<UserOutlined />} />
+                    <Avatar
+                      size={100}
+                      icon={<UserOutlined />}
+                      src={avatarUrl}
+                    />
                   </Row>
                   <Row justify="center">
-                    <Button
+                    <Upload {...props} showUploadList={false}>
+                      <Button icon={<UploadOutlined />}>更新頭像</Button>
+                    </Upload>
+                    {/* <Button
                       type="primary"
                       icon={<DownloadOutlined onClick={onUploadProfileIcon} />}>
                       更新頭像
-                    </Button>
+                    </Button> */}
                   </Row>
                 </Col>
                 <Col span={16} order={1}>

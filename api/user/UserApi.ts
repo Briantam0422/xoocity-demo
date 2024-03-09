@@ -22,3 +22,15 @@ export async function updateUserProfileApi( userId:string|number, input: Object 
     }
     return null
 }
+
+export async function uploadAvatarApi( user_id:string|number, form:FormData ){
+    const data = apiRequest.uploadFileRequest({
+        url: `user/${user_id}/profile/upload-avatar`,
+        method: "POST",
+        headers: {
+          accept: "application/json",
+        },
+        formData: form,
+      });
+      return data
+}
