@@ -6,7 +6,7 @@ export async function getUserApi( userId: string|number ){
         method: "GET"
     })
     if ( data ) {
-        return data
+        return data.user
     }
     return null
 }

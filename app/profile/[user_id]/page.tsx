@@ -37,26 +37,28 @@ export default function Home() {
 
   useEffect(() => {
     const Init = async () => {
-      const data = await getUserApi(user_id);
-      if (data) {
-        form.setFieldValue("first_name", data.user.first_name);
-        form.setFieldValue("last_name", data.user.last_name);
-        form.setFieldValue("gender", data.user.gender);
-        form.setFieldValue("birthday", dayjs("2004-02-01"));
-        form.setFieldValue("country", data.user.country);
-        form.setFieldValue("province", data.user.province);
-        form.setFieldValue("city", data.user.city);
-        form.setFieldValue("district", data.user.district);
-        form.setFieldValue("county", data.user.county);
-        form.setFieldValue("address", data.user.address);
-        form.setFieldValue("profile_intro", data.user.profile_intro);
+      const user = await getUserApi(user_id);
+      if (user) {
+        form.setFieldValue("first_name", user.first_name);
+        form.setFieldValue("last_name", user.last_name);
+        form.setFieldValue("gender", user.gender);
+        form.setFieldValue("birthday", dayjs(user.birthday));
+        form.setFieldValue("country", user.country);
+        form.setFieldValue("province", user.province);
+        if (user.province != "" && user.province != null) {
+          setCityDisable(false);
+          form.setFieldValue("city", user.city);
+        }
+        form.setFieldValue("district", user.district);
+        form.setFieldValue("county", user.county);
+        form.setFieldValue("address", user.address);
+        form.setFieldValue("profile_intro", user.profile_intro);
       }
     };
     Init();
   });
 
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
-    // TODO call api
     const user = await updateUserProfileApi(user_id, values);
     form.setFieldValue("first_name", user.first_name);
     form.setFieldValue("last_name", user.last_name);
